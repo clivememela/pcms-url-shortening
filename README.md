@@ -13,7 +13,8 @@ A Singleton class responsible for: <br />
 <br /> <br />
 <b> URLValidator.java</b> <br />
 A Singleton class responsible for validating URL's validity
-<b> ShortenRequest.java</b> <br />
+ <br />
+ <b> ShortenRequest.java</b>
 
 <h3>controller</h3>
 <b>UrlShorteningController.java</b> <br />
