@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,24 +32,33 @@ public class UrlShorteningController {
 		this.urlConverterService = urlConverterService;
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String showUrlShorteningPage() {
+	@RequestMapping(value = "/")
+	public String showUrlShorteningPage(Model model) {
+
+		model.addAttribute("urlform", new UrlForm());
 		return "urlshortening.html";
 	}
 
 	@RequestMapping(value = "/shortenurl", method = RequestMethod.POST)
-	public String shortenUrl(@ModelAttribute("urlForm") UrlForm urlForm,
-			BindingResult bindingResult, Model model) throws Exception {
-		LOGGER.info("Received url to shorten: " + urlForm.getLongUrl());
-		String longUrl = urlForm.getLongUrl();
-		if (URLValidator.INSTANCE.validateURL(longUrl)) {
-			String localURL = urlForm.getLongUrl().toString();
-			String shortenedUrl = urlConverterService.shortenURL(localURL,
-					urlForm.getLongUrl());
-			LOGGER.info("Shortened url to: " + shortenedUrl);
-			return shortenedUrl;
+	public String shortenUrl(@ModelAttribute("urlform") UrlForm urlform,
+			HttpServletRequest request, Model model) throws Exception {
+
+		LOGGER.info("Received url to shorten: " + urlform.getLongUrl());
+
+		String longUrl = urlform.getLongUrl();
+
+		try {
+			URLValidator.INSTANCE.validateURL(longUrl);
+		} catch (Exception e) {
+			LOGGER.debug("Please enter a valid URL");
 		}
-		throw new Exception("Please enter a valid URL");
+
+		String localURL = request.getRequestURL().toString();
+		String shortenedUrl = urlConverterService.shortenURL(localURL,
+				urlform.getLongUrl());
+		LOGGER.info("Shortened url to: " + shortenedUrl);
+		return "urlshorteningresult.html";
+
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

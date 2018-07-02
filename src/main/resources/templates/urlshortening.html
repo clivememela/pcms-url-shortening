@@ -17,9 +17,10 @@
 
 <body>
     <section id="sign-in">
-
+		<div class="container">
         <!-- Capture Result Form -->
-        <form th:action="@{/shortenurl}" method="POST" modelAttribute="urlForm">
+        <!--<form th:action="@{/shortenurl}" modelAttribute="urlForm" method="POST">-->
+        <form th:action="@{/shortenurl}" th:object="${urlform}" method="POST">
             <div class="card-panel clearfix">
                 <div class="row">
                     <div class="col"></div>
@@ -27,11 +28,13 @@
                 
                 <h4>Enter Url to Shorten</h4>
 
-                <!-- Long Url -->
-                <div class="input-field">
-                    <input path="longurl" id="longurl" name="longurl" type="text" class="form-control" th:placeholder="#{placeholder.longurl}"/>
-                </div>
-                <!-- /Long Url -->
+				<!-- <bind path="longurl"> -->
+	                <!-- Long Url -->
+	                <div class="input-field" >
+	                    <input name="longurl" type="text" th:field="*{longUrl}" class="form-control" th:placeholder="#{placeholder.longurl}" autofocus="true"/>
+	                </div>
+	                <!-- /Long Url -->
+                <!-- </bind> -->
 
                 <button class="waves-effect waves-light btn-large z-depth-0 z-depth-1-hover">SHORTEN URL</button>
 
@@ -45,6 +48,7 @@
                 </div>
             </div>
         </form>
+        </div>
         <!-- /Sign In Form -->
     </section>
 
