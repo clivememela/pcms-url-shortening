@@ -1,0 +1,11 @@
+{"url":"dash.wifire.io","primarycolour":"#f16822","secondarycolour":"#e56320",largelogo":"https://s3-eu-west-1.amazonaws.com/wifire.ops.config/white/wifire/licencelogo.png","smalllogo":"https://s3-eu-west-1.amazonaws.com/wifire.ops.config/white/wifire/wifirelogo.png","screenshotlogo":"/themes/default/assets/images/screenshots.png","businessname":"Wi-Fire","supportemail":"mailto:support@wifire.co.za"}
+
+
+
+
+
+
+
+
+
+
