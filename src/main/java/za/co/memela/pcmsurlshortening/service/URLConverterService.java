@@ -40,7 +40,6 @@ public class URLConverterService {
 
 	private String formatLocalURLFromShortener(String localURL) {
 		String[] addressComponents = localURL.split("/");
-		// remove the endpoint (last index)
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < addressComponents.length - 1; ++i) {
 			sb.append(addressComponents[i]);

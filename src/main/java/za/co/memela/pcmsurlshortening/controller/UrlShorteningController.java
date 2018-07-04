@@ -1,17 +1,12 @@
 package za.co.memela.pcmsurlshortening.controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.view.RedirectView;
@@ -40,35 +35,40 @@ public class UrlShorteningController {
 	}
 
 	@RequestMapping(value = "/shortenurl", method = RequestMethod.POST)
-	public String shortenUrl(@ModelAttribute("urlform") UrlForm urlform,
-			HttpServletRequest request, Model model) throws Exception {
+	public RedirectView shortenUrl(@ModelAttribute("urlform") UrlForm urlform,
+			Model model) throws Exception {
 
 		LOGGER.info("Received url to shorten: " + urlform.getLongUrl());
 
+		URI uri = new URI(urlform.getLongUrl());
+
 		String longUrl = urlform.getLongUrl();
 
+		LOGGER.info("longUrl is : " + longUrl);
+
 		try {
-			URLValidator.INSTANCE.validateURL(longUrl);
+			boolean isValidURL = URLValidator.INSTANCE.validateURL(longUrl);
+
+			LOGGER.info("isValidURL = " + isValidURL);
+
 		} catch (Exception e) {
 			LOGGER.debug("Please enter a valid URL");
 		}
 
-		String localURL = request.getRequestURL().toString();
-		String shortenedUrl = urlConverterService.shortenURL(localURL,
-				urlform.getLongUrl());
-		LOGGER.info("Shortened url to: " + shortenedUrl);
-		return "urlshorteningresult.html";
+		String localURL = uri.getScheme() + "://" + uri.getHost();
+		LOGGER.info("localURL is : " + localURL);
+		String shortenedUrl = urlConverterService.shortenURL(localURL, longUrl);
+		LOGGER.info(longUrl + " : Shortened to: " + shortenedUrl);
 
-	}
+		model.addAttribute("longUrl", longUrl);
+		model.addAttribute("shortenedUrl", shortenedUrl);
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public RedirectView redirectUrl(@PathVariable String id,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException, URISyntaxException, Exception {
-		LOGGER.debug("Received shortened url to redirect: " + id);
-		String redirectUrlString = urlConverterService.getLongURLFromID(id);
 		RedirectView redirectView = new RedirectView();
-		redirectView.setUrl("http://" + redirectUrlString);
+
+		redirectView.setContextRelative(true);
+
+		redirectView.setUrl("urlshorteningresult.html");
 		return redirectView;
+
 	}
 }
