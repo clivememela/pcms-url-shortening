@@ -19,7 +19,7 @@
     <section id="sign-in">
 
         <!-- Shorten Url Result Form -->
-        <form th:action="@{/}" method="">
+        <form th:action="@{/}">
             <div class="card-panel clearfix">
                 <div class="row">
                     <div class="col"></div>
@@ -29,11 +29,13 @@
                 
                 <p>The following URL: </p>
                 
-                <p>${longurl}</p>
+                <p th:text="${longurl}"/>
                 
-                <p>has a length of ${longurl.length} characters and resulted in the following shortened URL which has ${shortenedurl.length} characters</p>
+                <p>has a length of : </p> <div th:text="${#strings.length(longurl)}" /> <p>characters and resulted in the following shortened URL which has </p>
+                <div th:text="${#strings.length(shortenedurl)}" />
+                <p>characters is : </p>
                 
-                <p>${shortenedurl}</p>
+                <p th:text="${shortenedurl}"/>
 
             </div>
             
