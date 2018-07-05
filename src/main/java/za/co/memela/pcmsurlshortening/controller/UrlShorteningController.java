@@ -55,7 +55,12 @@ public class UrlShorteningController {
 			LOGGER.debug("Please enter a valid URL");
 		}
 
-		if (URLValidator.INSTANCE.validateURL(longurl)) {
+		if (URLValidator.INSTANCE.validateURL(longurl)) { // this validation is
+															// best
+															// done on
+															// the front end.
+															// doing it twice
+															// wont hurt.
 			LOGGER.info("longUrl is valid.......");
 
 			String localURL = uri.getScheme() + "://" + uri.getHost();
@@ -64,36 +69,17 @@ public class UrlShorteningController {
 					longurl);
 			LOGGER.info(longurl + " : Shortened to: " + shortenedurl);
 
-			/*
-			 * UrlResultForm urlResultForm = new UrlResultForm();
-			 * 
-			 * urlResultForm.setLongurl(longUrl);
-			 * urlResultForm.setShorturl(shortenedUrl);
-			 */
-
-			model.addAttribute("longUrl", longurl);
-			model.addAttribute("shortenedUrl", shortenedurl);
-
 			ModelAndView modelAndView = new ModelAndView("urlshorteningresult");
 			modelAndView.addObject("longurl", longurl);
 			modelAndView.addObject("shortenedurl", shortenedurl);
 
 			return modelAndView;
-			// return "urlshorteningresult.html";
+		} else {
+			ModelAndView modelAndView = new ModelAndView("/");
+			modelAndView.addObject("message", "Please enter a valid URL");
 		}
 
 		throw new Exception("Please enter a valid URL");
-
-		/*
-		 * model.addAttribute("longUrl", longUrl);
-		 * model.addAttribute("shortenedUrl", shortenedUrl);
-		 * 
-		 * RedirectView redirectView = new RedirectView();
-		 * 
-		 * redirectView.setContextRelative(true);
-		 * 
-		 * redirectView.setUrl("urlshorteningresult.html"); return redirectView;
-		 */
 
 	}
 }
