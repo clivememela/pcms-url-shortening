@@ -37,6 +37,8 @@ public class UrlShorteningController {
 	@RequestMapping(value = "/shortenurl", method = RequestMethod.POST)
 	public ModelAndView shortenUrl(@ModelAttribute("urlform") UrlForm urlform,
 			Model model) throws Exception {
+		
+		ModelAndView  modelAndView;
 
 		LOGGER.info("Received url to shorten: " + urlform.getLongUrl());
 
@@ -44,42 +46,29 @@ public class UrlShorteningController {
 
 		String longurl = urlform.getLongUrl();
 
-		LOGGER.info("longUrl is : " + longurl);
-
-		try {
-			boolean isValidURL = URLValidator.INSTANCE.validateURL(longurl);
-
-			LOGGER.info("isValidURL = " + isValidURL);
-
-		} catch (Exception e) {
-			LOGGER.debug("Please enter a valid URL");
-		}
-
-		if (URLValidator.INSTANCE.validateURL(longurl)) { // this validation is
+		if (URLValidator.INSTANCE.validateURL(longurl)) {   // this validation is
 															// best
 															// done on
 															// the front end.
 															// doing it twice
 															// wont hurt.
-			LOGGER.info("longUrl is valid.......");
-
+			LOGGER.info("isValidURL : " + longurl + " = is valid.......");
+			
 			String localURL = uri.getScheme() + "://" + uri.getHost();
 			LOGGER.info("localURL is : " + localURL);
-			String shortenedurl = urlConverterService.shortenURL(localURL,
-					longurl);
+			String shortenedurl = urlConverterService.shortenURL(localURL, longurl);
 			LOGGER.info(longurl + " : Shortened to: " + shortenedurl);
-
-			ModelAndView modelAndView = new ModelAndView("urlshorteningresult");
+	
+			modelAndView = new ModelAndView("urlshorteningresult");
 			modelAndView.addObject("longurl", longurl);
 			modelAndView.addObject("shortenedurl", shortenedurl);
-
-			return modelAndView;
+			
 		} else {
-			ModelAndView modelAndView = new ModelAndView("/");
+			modelAndView = new ModelAndView("/");
 			modelAndView.addObject("message", "Please enter a valid URL");
 		}
-
-		throw new Exception("Please enter a valid URL");
+			
+		return modelAndView;
 
 	}
 }
